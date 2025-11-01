@@ -1,0 +1,9 @@
+{
+  "tasks": {
+    "dev": "deno run --watch main.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "grammy": "https://deno.land/x/grammy@v1.19.1/mod.ts"
+  }
+}
