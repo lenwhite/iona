@@ -1,6 +1,8 @@
 import { assertEquals } from "@std/assert";
-import { add } from "./main.ts";
+import { parseWhitelist } from "./src/config/env.ts";
 
-Deno.test(function addTest() {
-  assertEquals(add(2, 3), 5);
+Deno.test("parseWhitelist normalizes usernames", () => {
+  const input = "Alice,  Bob ,carol,,";
+  const result = parseWhitelist(input);
+  assertEquals(result, ["alice", "bob", "carol"]);
 });
