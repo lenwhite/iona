@@ -44,26 +44,21 @@ export async function startBot(): Promise<void> {
   const bot = await createBot();
   const env = await loadEnv();
 
-  const controller = new AbortController();
-  const { signal } = controller;
-
   let stopping = false;
   const stop = async () => {
     if (stopping) {
       return;
     }
     stopping = true;
-    controller.abort();
     await bot.stop();
     await prisma.$disconnect();
     console.log("Bot shut down gracefully.");
   };
 
-  Deno.addSignalListener("SIGINT", stop);
-  Deno.addSignalListener("SIGTERM", stop);
+  process.on("SIGINT", stop);
+  process.on("SIGTERM", stop);
 
   await bot.start({
-    signal,
     onStart: (botInfo) => {
       console.log(
         `Bot @${botInfo.username} is running. Using OpenAI model ${env.openAiModel}.`,

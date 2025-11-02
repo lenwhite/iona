@@ -1,4 +1,4 @@
-import { load } from "@std/dotenv";
+import { config } from "dotenv";
 import { z } from "zod";
 
 const envSchema = z.object({
@@ -24,14 +24,14 @@ export async function loadEnv(): Promise<EnvConfig> {
     return cachedConfig;
   }
 
-  await load({ export: true });
+  config();
 
   const parsed = envSchema.parse({
-    TELEGRAM_BOT_TOKEN: Deno.env.get("TELEGRAM_BOT_TOKEN"),
-    OPENAI_API_KEY: Deno.env.get("OPENAI_API_KEY"),
-    OPENAI_MODEL: Deno.env.get("OPENAI_MODEL"),
-    DATABASE_URL: Deno.env.get("DATABASE_URL"),
-    TELEGRAM_WHITELIST: Deno.env.get("TELEGRAM_WHITELIST"),
+    TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    OPENAI_MODEL: process.env.OPENAI_MODEL,
+    DATABASE_URL: process.env.DATABASE_URL,
+    TELEGRAM_WHITELIST: process.env.TELEGRAM_WHITELIST,
   });
 
   cachedConfig = {
