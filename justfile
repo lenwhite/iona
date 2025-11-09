@@ -6,3 +6,12 @@ bot:
 
 migrate:
   docker compose run --rm telegram-bot bunx prisma migrate deploy
+
+migrate-dev name:
+  docker compose run --rm telegram-bot bunx prisma migrate dev --name {{name}}
+
+migrate-reset:
+  docker compose run --rm telegram-bot bunx prisma migrate reset
+
+studio:
+  docker compose run --rm -p 5555:5555 telegram-bot bunx prisma studio
