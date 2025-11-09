@@ -21,6 +21,22 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/iona?schema=public
     depends_on:
       - postgres
+    develop:
+      watch:
+        # Sync source code changes and restart the container
+        - action: sync+restart
+          path: ./src
+          target: /app/src
+        - action: sync+restart
+          path: ./main.ts
+          target: /app/main.ts
+        # Rebuild when dependencies or schema change
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./bun.lockb
+        - action: rebuild
+          path: ./prisma
 
 volumes:
   postgres-data:
