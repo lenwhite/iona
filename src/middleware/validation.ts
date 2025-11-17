@@ -3,7 +3,7 @@ import type { BotContext } from "../types/bot-context.ts";
 
 /**
  * Authentication middleware that validates required user data and checks whitelist.
- * After this middleware runs, the context is guaranteed to have chatId and username.
+ * After this middleware runs, the context is guaranteed to have username.
  */
 export function createAuthMiddleware(
 	whitelist: string[],

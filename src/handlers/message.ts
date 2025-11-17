@@ -5,7 +5,6 @@ import { gatherContext } from "../services/rag.ts";
 const HISTORY_WINDOW = 12;
 
 export async function handleTextMessage(ctx: ValidatedContext): Promise<void> {
-	const chatId = ctx.chat.id.toString();
 	const username = ctx.from.username.toLowerCase();
 	const displayName = ctx.from.first_name ?? ctx.from.last_name ?? "";
 
@@ -16,13 +15,9 @@ export async function handleTextMessage(ctx: ValidatedContext): Promise<void> {
 
 	const conversation = await ctx.prisma.conversationThread.upsert({
 		where: {
-			chatId_username: {
-				chatId,
-				username,
-			},
+			username,
 		},
 		create: {
-			chatId,
 			username,
 			displayName,
 		},

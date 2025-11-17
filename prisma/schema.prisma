@@ -9,14 +9,13 @@ datasource db {
 
 model ConversationThread {
   id          String    @id @default(cuid())
-  chatId      String
   username    String
   displayName String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   messages    Message[]
 
-  @@unique([chatId, username])
+  @@unique([username])
 }
 
 model Message {
