@@ -1,18 +1,13 @@
 import { MessageRole } from "@prisma/client";
-import type { BotContext } from "../types/bot-context.ts";
+import type { ValidatedContext } from "../types/bot-context.ts";
 import { gatherContext } from "../services/rag.ts";
 
 const HISTORY_WINDOW = 12;
 
-export async function handleTextMessage(ctx: BotContext): Promise<void> {
-  const chatId = ctx.chat?.id?.toString();
-  const username = ctx.from?.username?.toLowerCase();
-  const displayName = ctx.from?.first_name ?? ctx.from?.last_name ?? "";
-
-  // These should always be present after middleware validation
-  if (!chatId || !username) {
-    return;
-  }
+export async function handleTextMessage(ctx: ValidatedContext): Promise<void> {
+  const chatId = ctx.chat.id.toString();
+  const username = ctx.from.username.toLowerCase();
+  const displayName = ctx.from.first_name ?? ctx.from.last_name ?? "";
 
   const text = ctx.message?.text?.trim();
   if (!text) {

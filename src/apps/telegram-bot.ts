@@ -2,9 +2,8 @@ import { Bot } from "grammy";
 import { loadEnv } from "../config/env.ts";
 import { prisma } from "../services/prisma.ts";
 import { createAiClient } from "../services/ai.ts";
-import type { BotContext } from "../types/bot-context.ts";
-import { createWhitelistMiddleware } from "../middleware/whitelist.ts";
-import { createValidationMiddleware } from "../middleware/validation.ts";
+import type { BotContext, ValidatedContext } from "../types/bot-context.ts";
+import { createAuthMiddleware } from "../middleware/validation.ts";
 import { handleTextMessage } from "../handlers/message.ts";
 
 export async function createBot(): Promise<Bot<BotContext>> {
@@ -21,8 +20,7 @@ export async function createBot(): Promise<Bot<BotContext>> {
     return next();
   });
 
-  bot.use(createWhitelistMiddleware(env.whitelistedUsernames));
-  bot.use(createValidationMiddleware());
+  bot.use(createAuthMiddleware(env.whitelistedUsernames));
 
   bot.catch((err) => {
     console.error("Telegram bot error", err);
@@ -34,7 +32,9 @@ export async function createBot(): Promise<Bot<BotContext>> {
     );
   });
 
-  bot.on("message:text", handleTextMessage);
+  bot.on("message:text", (ctx, next) =>
+    handleTextMessage(ctx as ValidatedContext),
+  );
   bot.on("message", async (ctx) => {
     await ctx.reply("I only understand text messages for now.");
   });

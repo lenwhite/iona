@@ -8,3 +8,10 @@ export interface BotContext extends Context {
   prisma: PrismaClient;
   ai: AiClient;
 }
+
+export interface ValidatedContext extends BotContext {
+  chat: NonNullable<BotContext["chat"]>;
+  from: NonNullable<BotContext["from"]> & {
+    username: string;
+  };
+}
