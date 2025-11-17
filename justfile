@@ -17,8 +17,7 @@ studio:
   docker compose run --rm -p 5555:5555 telegram-bot bunx prisma studio
 
 lint:
-  bunx biome lint .
-  bunx tsc --noEmit
+  bunx @biomejs/biome lint . && bunx tsc --noEmit
 
 format:
-  bunx biome format --write .
+  bunx @biomejs/biome format --write .

@@ -1,14 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 
 type PrismaGlobal = {
-  prisma?: PrismaClient;
+	prisma?: PrismaClient;
 };
 
 const globalForPrisma: PrismaGlobal = globalThis as PrismaGlobal;
 
-export const prisma: PrismaClient = globalForPrisma.prisma ??
-  new PrismaClient();
+export const prisma: PrismaClient =
+	globalForPrisma.prisma ?? new PrismaClient();
 
 if (!globalForPrisma.prisma) {
-  globalForPrisma.prisma = prisma;
+	globalForPrisma.prisma = prisma;
 }

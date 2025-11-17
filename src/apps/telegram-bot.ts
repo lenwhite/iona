@@ -7,64 +7,64 @@ import { createAuthMiddleware } from "../middleware/validation.ts";
 import { handleTextMessage } from "../handlers/message.ts";
 
 export async function createBot(): Promise<Bot<BotContext>> {
-  const env = await loadEnv();
-  const aiClient = createAiClient(env.openAiApiKey, env.openAiModel);
+	const env = await loadEnv();
+	const aiClient = createAiClient(env.openAiApiKey, env.openAiModel);
 
-  const bot = new Bot<BotContext>(env.telegramBotToken);
+	const bot = new Bot<BotContext>(env.telegramBotToken);
 
-  bot.use((ctx, next) => {
-    ctx.env = env;
-    ctx.prisma = prisma;
-    ctx.ai = aiClient;
+	bot.use((ctx, next) => {
+		ctx.env = env;
+		ctx.prisma = prisma;
+		ctx.ai = aiClient;
 
-    return next();
-  });
+		return next();
+	});
 
-  bot.use(createAuthMiddleware(env.whitelistedUsernames));
+	bot.use(createAuthMiddleware(env.whitelistedUsernames));
 
-  bot.catch((err) => {
-    console.error("Telegram bot error", err);
-  });
+	bot.catch((err) => {
+		console.error("Telegram bot error", err);
+	});
 
-  bot.command("start", async (ctx) => {
-    await ctx.reply(
-      "Hey there! Send me a message and I'll ask the AI for help.",
-    );
-  });
+	bot.command("start", async (ctx) => {
+		await ctx.reply(
+			"Hey there! Send me a message and I'll ask the AI for help.",
+		);
+	});
 
-  bot.on("message:text", (ctx, next) =>
-    handleTextMessage(ctx as ValidatedContext),
-  );
-  bot.on("message", async (ctx) => {
-    await ctx.reply("I only understand text messages for now.");
-  });
+	bot.on("message:text", (ctx, _next) =>
+		handleTextMessage(ctx as ValidatedContext),
+	);
+	bot.on("message", async (ctx) => {
+		await ctx.reply("I only understand text messages for now.");
+	});
 
-  return bot;
+	return bot;
 }
 
 export async function startBot(): Promise<void> {
-  const bot = await createBot();
-  const env = await loadEnv();
+	const bot = await createBot();
+	const env = await loadEnv();
 
-  let stopping = false;
-  const stop = async () => {
-    if (stopping) {
-      return;
-    }
-    stopping = true;
-    await bot.stop();
-    await prisma.$disconnect();
-    console.log("Bot shut down gracefully.");
-  };
+	let stopping = false;
+	const stop = async () => {
+		if (stopping) {
+			return;
+		}
+		stopping = true;
+		await bot.stop();
+		await prisma.$disconnect();
+		console.log("Bot shut down gracefully.");
+	};
 
-  process.on("SIGINT", stop);
-  process.on("SIGTERM", stop);
+	process.on("SIGINT", stop);
+	process.on("SIGTERM", stop);
 
-  await bot.start({
-    onStart: (botInfo) => {
-      console.log(
-        `Bot @${botInfo.username} is running. Using OpenAI model ${env.openAiModel}.`,
-      );
-    },
-  });
+	await bot.start({
+		onStart: (botInfo) => {
+			console.log(
+				`Bot @${botInfo.username} is running. Using OpenAI model ${env.openAiModel}.`,
+			);
+		},
+	});
 }
