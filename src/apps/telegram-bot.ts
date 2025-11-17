@@ -4,6 +4,7 @@ import { prisma } from "../services/prisma.ts";
 import { createAiClient } from "../services/ai.ts";
 import type { BotContext } from "../types/bot-context.ts";
 import { createWhitelistMiddleware } from "../middleware/whitelist.ts";
+import { createValidationMiddleware } from "../middleware/validation.ts";
 import { handleTextMessage } from "../handlers/message.ts";
 
 export async function createBot(): Promise<Bot<BotContext>> {
@@ -21,6 +22,7 @@ export async function createBot(): Promise<Bot<BotContext>> {
   });
 
   bot.use(createWhitelistMiddleware(env.whitelistedUsernames));
+  bot.use(createValidationMiddleware());
 
   bot.catch((err) => {
     console.error("Telegram bot error", err);

@@ -9,10 +9,8 @@ export async function handleTextMessage(ctx: BotContext): Promise<void> {
   const username = ctx.from?.username?.toLowerCase();
   const displayName = ctx.from?.first_name ?? ctx.from?.last_name ?? "";
 
+  // These should always be present after middleware validation
   if (!chatId || !username) {
-    await ctx.reply(
-      "This bot can only be used by whitelisted users with a Telegram username.",
-    );
     return;
   }
 
@@ -48,11 +46,12 @@ export async function handleTextMessage(ctx: BotContext): Promise<void> {
 
   const recentMessages = await ctx.prisma.message.findMany({
     where: { conversationId: conversation.id },
-    orderBy: { createdAt: "asc" },
+    orderBy: { createdAt: "desc" },
     take: HISTORY_WINDOW,
   });
 
   const historyForModel = recentMessages
+    .reverse()
     .slice(0, -1)
     .map((msg) => ({
       role: msg.role.toLowerCase() as "user" | "assistant" | "system",
