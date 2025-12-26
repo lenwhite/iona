@@ -1,10 +1,10 @@
 import { Bot } from "grammy";
-import { loadEnv } from "../config/env.ts";
-import { prisma } from "../services/prisma.ts";
-import { createAiClient } from "../services/ai.ts";
-import type { BotContext, ValidatedContext } from "../types/bot-context.ts";
-import { createAuthMiddleware } from "../middleware/validation.ts";
-import { handleTextMessage } from "../handlers/message.ts";
+import { loadEnv } from "../../config/env.ts";
+import { prisma } from "../../services/prisma.ts";
+import { createAiClient } from "../../services/ai.ts";
+import type { BotContext, ValidatedContext } from "./types/context.ts";
+import { createAuthMiddleware } from "./middleware/auth.ts";
+import { handleTextMessage } from "./handlers/text-message.ts";
 
 export async function createBot(): Promise<Bot<BotContext>> {
 	const env = await loadEnv();

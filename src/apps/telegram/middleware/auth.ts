@@ -1,5 +1,5 @@
 import type { MiddlewareFn } from "grammy";
-import type { BotContext } from "../types/bot-context.ts";
+import type { BotContext } from "../types/context.ts";
 
 /**
  * Authentication middleware that validates required user data and checks whitelist.

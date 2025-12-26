@@ -85,7 +85,7 @@ history in Postgres for future retrieval augmented generation (RAG) experiments.
 
 ```
 src/
-  bot.ts                # Bot entrypoint + middleware wiring
+  apps/bot.ts           # Bot entrypoint + middleware wiring
   config/env.ts         # Environment schema & whitelist parser
   handlers/message.ts   # Text message handler with history persistence
   middleware/           # Whitelist guard
@@ -180,3 +180,5 @@ bun test
 ## Future stuff
 
 - [ ] https://github.com/vrtmrz/obsidian-livesync - obsidian integration somehow?
+- [ ] migrate to drizzle https://orm.drizzle.team/docs/migrations for easier migrations / more modern ORM
+- [ ] basic embeddings + vector db integration for RAG [AI SDK Core: Embeddings](https://ai-sdk.dev/docs/ai-sdk-core/embeddings)
